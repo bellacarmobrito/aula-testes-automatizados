@@ -37,6 +37,9 @@ jobs:
       - name: Wait for API
         run: sleep 15
 
+      - name: Give permission to mvnw (tests)
+        run: chmod +x mvnw
+
       - name: Run tests
         run: ./mvnw test
 
