@@ -31,8 +31,7 @@ jobs:
           ./mvnw clean package -DskipTests
 
       - name: Start API
-        run: |
-          cd api-entregas-aula-testes-automatizados
+        run:
           docker compose up -d --build
 
       - name: Wait for API

@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   api:
-    build: .
+    build:
+      context: ./api-entregas-aula-testes-automatizados
+      dockerfile: Dockerfile
     container_name: entregas-api
     ports:
       - "8080:8080"
