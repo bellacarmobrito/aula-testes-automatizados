@@ -1,0 +1,29 @@
+name: Continuous Integration
+on:
+  pull_request:
+  push:
+    branches:
+      - '*'
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '22'
+          distribution: 'adopt'
+      - name: Build and test
+        run: mvn clean test
+  deploy:
+    runs-on: ubuntu-latest
+    needs: continuous-integration
+
+    if: success()
+
+    steps:
+      - name: Deploy application
+        run: |
+          echo "Deploying application..."
