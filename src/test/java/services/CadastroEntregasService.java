@@ -16,8 +16,6 @@ import org.json.JSONTokener;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Set;
 
 import static io.restassured.RestAssured.given;
@@ -34,7 +32,6 @@ public class CadastroEntregasService {
     String baseUrl = "http://localhost:8080";
     String idDelivery;
 
-    String schemasPath = "C:/Users/isa_g/IdeaProjects/testes-automatizados/src/test/resources/schemas/";
     JSONObject jsonSchema;
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -78,8 +75,15 @@ public class CadastroEntregasService {
                 .response();
     }
 
-    private JSONObject loadJsonFromFile(String filePath) throws IOException {
-        try(InputStream inputStream = Files.newInputStream(Paths.get(filePath))){
+    private JSONObject loadJsonFromFile(String fileName) throws IOException {
+        try (InputStream inputStream = getClass()
+                .getClassLoader()
+                .getResourceAsStream("schemas/" + fileName)) {
+
+            if (inputStream == null) {
+                throw new RuntimeException("Arquivo não encontrado no classpath: " + fileName);
+            }
+
             JSONTokener tokener = new JSONTokener(inputStream);
             return new JSONObject(tokener);
         }
@@ -87,7 +91,7 @@ public class CadastroEntregasService {
 
     public void setContract(String contract) throws IOException {
         switch (contract) {
-            case "Cadastro bem-sucedido de entrega" -> jsonSchema = loadJsonFromFile(schemasPath + "cadastro-bem-sucedido-de-entrega.json");
+            case "Cadastro bem-sucedido de entrega" -> jsonSchema = loadJsonFromFile("cadastro-bem-sucedido-de-entrega.json");
             default -> throw new IllegalStateException("Unexpected contract: " + contract);
         }
     }
