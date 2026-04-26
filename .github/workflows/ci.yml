@@ -1,21 +1,34 @@
-- name: Checkout testes
-  uses: actions/checkout@v3
+name: Continuous Integration
 
-- name: Clone API
-  run: git clone https://github.com/bellacarmobrito/api-entregas-aula-testes-automatizados.git
+on:
+    push:
+      branches: [ '*' ]
+    pull_request:
 
-- name: Build API JAR
-  run: |
-    cd api-entregas-aula-testes-automatizados
-    ./mvnw clean package -DskipTests
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
 
-- name: Start API
-  run: |
-    cd api-entregas-aula-testes-automatizados
-    docker compose up -d --build
+    steps:
+      - name: Checkout testes
+        uses: actions/checkout@v3
 
-- name: Wait for API
-  run: sleep 15
+      - name: Clone API
+        run: git clone https://github.com/bellacarmobrito/api-entregas-aula-testes-automatizados.git
 
-- name: Run tests
-  run: ./mvnw test
+      - name: Build API JAR
+        run: |
+          cd api-entregas-aula-testes-automatizados
+          ./mvnw clean package -DskipTests
+
+      - name: Start API
+        run: |
+          cd api-entregas-aula-testes-automatizados
+          docker compose up -d --build
+
+      - name: Wait for API
+        run: sleep 15
+
+      - name: Run tests
+        run: ./mvnw test
+
